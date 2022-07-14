@@ -1,6 +1,7 @@
 # DataHub Code Generation Lib
 
-*This library is part of the [DataHub Project][1].*
+*This library is part of the [DataHub Project][1].*  
+*Datahub is still under development and is not to be considered production ready. Exhaustive documentation is yet to be released.*
 
 ---
 
