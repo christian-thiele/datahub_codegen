@@ -1,3 +1,6 @@
+## 0.13.0
+- match datahub minor version to make compatibility more clear
+
 ## 0.1.1
 - added build.yaml
 
