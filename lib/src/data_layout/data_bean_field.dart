@@ -21,6 +21,10 @@ class DataBeanField {
       : dataField = getDataField(field),
         foreignFieldAccessor = getForeignFieldAccessor(field);
 
+  String get valueAccessor => field.type.isEnum
+      ? '${field.name}${dataField.nullable ? '?.name' : '.name'}'
+      : field.name;
+
   static DataField getDataField(FieldElement field) {
     final fieldName = getColumnName(field);
     final fieldType = getColumnType(field);
@@ -86,6 +90,8 @@ class DataBeanField {
       return FieldType.Point;
     } else if (fieldType.isJsonType) {
       return FieldType.Json;
+    } else if (fieldType.isEnum) {
+      return FieldType.String;
     } else {
       throw DataBeanException.invalidType(fieldType);
     }
@@ -141,7 +147,6 @@ class DataBeanField {
     return getDataField(fieldElement) as PrimaryKey;
   }
 
-  // this is kind of a hacky workaround
   static String? getForeignFieldAccessor(FieldElement field) {
     final annotation = getAnnotation(field, ForeignKeyDaoField);
     if (annotation == null) {
@@ -155,5 +160,27 @@ class DataBeanField {
         (throw DataBeanException(
             'DAO "${foreignType.element?.name}" does not provide a primary key.'));
     return '${foreignClassElement.name}DataBean.${fieldElement.name}Field';
+  }
+
+  /// Get statement for decoding field type value from map object.
+  String getDecodingStatement(String objectName) {
+    final accessor = "$objectName['${dataField.name}']";
+
+    FieldType.values
+        .cast<FieldType?>()
+        .firstWhere((element) => false, orElse: () => null);
+
+    if (field.type.isEnum) {
+      final enumType = field.type.element!.name!;
+      if (dataField.nullable) {
+        // TODO this could be replaced with tryFindEnum from boost when boost is exported in datahub
+        return '$enumType.values.cast<$enumType?>().firstWhere((v) => v.name == ($accessor), orElse: () => null)';
+      } else {
+        // TODO this could be replaced with findEnum from boost when boost is exported in datahub
+        return '$enumType.values.firstWhere((v) => v.name == ($accessor))';
+      }
+    } else {
+      return accessor;
+    }
   }
 }

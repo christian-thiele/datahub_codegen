@@ -50,7 +50,7 @@ class DataBeanBuilder {
       if (field.dataField is PrimaryKey) {
         yield 'if (includePrimaryKey)';
       }
-      yield "'${field.dataField.name}': $objectName.${field.field.name},";
+      yield "'${field.dataField.name}': $objectName.${field.valueAccessor},";
     }
     yield '}; }';
   }
@@ -60,7 +60,7 @@ class DataBeanBuilder {
     yield '@override $layoutClass map(Map<String, dynamic> $objectName) {';
     yield 'return $layoutClass(';
     for (final field in fields) {
-      final decodingStatement = "$objectName['${field.dataField.name}']";
+      final decodingStatement = field.getDecodingStatement(objectName);
       if (field.parameter.isNamed) {
         yield '${field.parameter.name}: $decodingStatement,';
       } else {
