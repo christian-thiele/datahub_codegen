@@ -1,3 +1,6 @@
+## 0.14.0
+- fixed datahub package version restriction
+
 ## 0.13.1
 - added Enum support to Dao classes
 
