@@ -1,3 +1,6 @@
+## 0.14.1
+- added Duration FieldType to TransferObject generators
+
 ## 0.14.0
 - fixed datahub package version restriction
 

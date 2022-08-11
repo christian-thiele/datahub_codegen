@@ -97,6 +97,9 @@ extension DartTypeExtension on DartType {
   bool get isDartCoreDateTime =>
       TypeChecker.fromRuntime(DateTime).isExactlyType(this);
 
+  bool get isDartCoreDuration =>
+      TypeChecker.fromRuntime(Duration).isExactlyType(this);
+
   bool get isEnum =>
       (element is ClassElement) && (element as ClassElement).isEnum;
 

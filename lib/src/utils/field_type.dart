@@ -27,6 +27,8 @@ abstract class TransferFieldType {
       return BoolFieldType();
     } else if (type.isDartCoreDateTime) {
       return DateTimeFieldType();
+    } else if (type.isDartCoreDuration) {
+      return DurationFieldType();
     } else if (type.isUint8List) {
       return ByteFieldType();
     } else if (type.isDartCoreList) {
@@ -84,6 +86,13 @@ class DateTimeFieldType extends TransferFieldType {
 
   @override
   final typeName = 'DateTime';
+}
+
+class DurationFieldType extends TransferFieldType {
+  const DurationFieldType();
+
+  @override
+  final typeName = 'Duration';
 }
 
 class ByteFieldType extends TransferFieldType {
