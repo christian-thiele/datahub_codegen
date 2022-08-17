@@ -1,3 +1,6 @@
+## 0.15.0
+- changed DataBean / Dao classes according datahub 0.15.0
+
 ## 0.14.1
 - added Duration FieldType to TransferObject generators
 

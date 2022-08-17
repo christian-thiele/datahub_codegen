@@ -20,8 +20,8 @@ class DataBeanBuilder {
     final primaryKeyClass = primaryKeyField?.field.type.element?.name;
 
     final baseClass = primaryKeyClass != null
-        ? 'PKDaoDataBean<$layoutClass, $primaryKeyClass>'
-        : 'DaoDataBean<$layoutClass>';
+        ? 'PrimaryKeyDataBean<$layoutClass, $primaryKeyClass>'
+        : 'DataBean<$layoutClass>';
 
     yield 'final ${layoutClass}DataBean = _${layoutClass}DataBeanImpl._();';
     yield 'class _${layoutClass}DataBeanImpl extends $baseClass {';
@@ -34,7 +34,7 @@ class DataBeanBuilder {
     yield* buildConstConstructor();
     yield* buildFieldsAccessors(fields);
     yield* buildUnmapMethod(fields);
-    yield* buildMapMethod(fields);
+    yield* buildMapValuesMethod(fields);
     yield '}';
   }
 
@@ -55,9 +55,9 @@ class DataBeanBuilder {
     yield '}; }';
   }
 
-  Iterable<String> buildMapMethod(List<DataBeanField> fields) sync* {
+  Iterable<String> buildMapValuesMethod(List<DataBeanField> fields) sync* {
     final objectName = 'data';
-    yield '@override $layoutClass map(Map<String, dynamic> $objectName) {';
+    yield '@override $layoutClass mapValues(Map<String, dynamic> $objectName) {';
     yield 'return $layoutClass(';
     for (final field in fields) {
       final decodingStatement = field.getDecodingStatement(objectName);

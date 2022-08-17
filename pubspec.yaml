@@ -1,6 +1,6 @@
 name: datahub_codegen
 description: DataHub Code Generation Lib
-version: 0.14.1
+version: 0.15.0-dev.1
 homepage: https://datahubproject.net
 
 environment:
@@ -10,7 +10,7 @@ dependencies:
    analyzer: ^4.2.0
    boost: ^1.7.0
    build: ^2.3.0
-   datahub: '>=0.14.9 <0.15.0'
+   datahub: '>=0.15.0-dev.1 <0.16.0'
    source_gen: ^1.2.2
 
 dev_dependencies:

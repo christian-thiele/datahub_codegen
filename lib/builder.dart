@@ -9,20 +9,20 @@ import 'src/copy_with/copy_with_extension_generator.dart';
 import 'src/transfer_bean/transfer_bean_generator.dart';
 import 'src/transfer_bean/transfer_superclass_generator.dart';
 
-import 'src/data_layout/data_bean_generator.dart';
-import 'src/data_layout/data_superclass_generator.dart';
+import 'src/data_bean/data_bean_generator.dart';
+import 'src/data_bean/data_superclass_generator.dart';
 
 Builder transferBeanGenerator(BuilderOptions options) =>
     SharedPartBuilder([TransferBeanGenerator()], 'dto');
+
+Builder transferSuperclassGenerator(BuilderOptions options) =>
+    SharedPartBuilder([TransferSuperclassGenerator()], 'dts');
 
 Builder dataBeanGenerator(BuilderOptions options) =>
     SharedPartBuilder([DataBeanGenerator()], 'dao');
 
 Builder dataSuperclassGenerator(BuilderOptions options) =>
     SharedPartBuilder([DataSuperclassGenerator()], 'das');
-
-Builder transferSuperclassGenerator(BuilderOptions options) =>
-    SharedPartBuilder([TransferSuperclassGenerator()], 'dts');
 
 Builder copyWithExtensionGenerator(BuilderOptions options) =>
     SharedPartBuilder([CopyWithExtensionGenerator()], 'cwe');

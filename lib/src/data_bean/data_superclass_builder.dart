@@ -17,7 +17,7 @@ class DataSuperclassBuilder {
     final primaryKeyClass = primaryKeyField?.field.type.element?.name;
 
     final baseClass = primaryKeyClass != null
-        ? 'PKBaseDao<$layoutClass, $primaryKeyClass>'
+        ? 'PrimaryKeyDao<$layoutClass, $primaryKeyClass>'
         : 'BaseDao<$layoutClass>';
 
     yield 'abstract class _Dao extends $baseClass {';
