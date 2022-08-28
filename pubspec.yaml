@@ -10,7 +10,7 @@ dependencies:
    analyzer: ^4.2.0
    boost: ^1.7.0
    build: ^2.3.0
-   datahub: '>=0.15.0-dev.1 <1.0.0'
+   datahub: '>=0.15.0 <1.0.0'
    source_gen: ^1.2.2
 
 dev_dependencies:

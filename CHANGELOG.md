@@ -1,3 +1,6 @@
+## 0.15.1
+- changed datahub version constraint to allow all minor versions > 0.15.0
+
 ## 0.15.0
 - changed DataBean / Dao classes according datahub 0.15.0
 
