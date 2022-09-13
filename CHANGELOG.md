@@ -1,3 +1,8 @@
+## 0.16.0
+- added HubClient Builder
+- added HubProvider Builder
+- minor adjustments for analyzer 4.7.0
+
 ## 0.15.1
 - changed datahub version constraint to allow all minor versions > 0.15.0
 

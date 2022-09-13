@@ -12,6 +12,9 @@ import 'src/transfer_bean/transfer_superclass_generator.dart';
 import 'src/data_bean/data_bean_generator.dart';
 import 'src/data_bean/data_superclass_generator.dart';
 
+import 'src/hub/hub_client_generator.dart';
+import 'src/hub/hub_provider_generator.dart';
+
 Builder transferBeanGenerator(BuilderOptions options) =>
     SharedPartBuilder([TransferBeanGenerator()], 'dto');
 
@@ -32,3 +35,9 @@ Builder brokerApiServiceGenerator(BuilderOptions options) =>
 
 Builder brokerApiClientGenerator(BuilderOptions options) =>
     SharedPartBuilder([BrokerApiClientGenerator()], 'bac');
+
+Builder hubClientGenerator(BuilderOptions options) =>
+    SharedPartBuilder([HubClientGenerator()], 'hrc');
+
+Builder hubProviderGenerator(BuilderOptions options) =>
+    SharedPartBuilder([HubProviderGenerator()], 'hrp');

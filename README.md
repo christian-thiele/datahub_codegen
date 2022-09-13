@@ -25,6 +25,7 @@ This library contains generators for:
 - TransferObjects
 - DataBeans
 - BrokerApis
+- HubClients / Providers
 
 ### Usage
 
