@@ -2,6 +2,7 @@
 - added HubClient Builder
 - added HubProvider Builder
 - minor adjustments for analyzer 4.7.0
+- DAO / DTO fixes
 
 ## 0.15.1
 - changed datahub version constraint to allow all minor versions > 0.15.0

@@ -1,27 +1,22 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 
 import '../utils/field_type.dart';
 
 class EndpointParam {
   final String name;
   final TransferFieldType type;
-  final bool nullable;
 
-  EndpointParam(this.name, this.type, this.nullable);
+  EndpointParam(this.name, this.type);
 
   EndpointParam.fromParam(ParameterElement param)
       : name = param.name,
-        type = TransferFieldType.fromDartType(param.type),
-        nullable = param.type.nullabilitySuffix != NullabilitySuffix.none;
+        type = TransferFieldType.fromDartType(param.type);
 
-  String get paramStatement => '${type.typeName}$nullabilitySuffix $name';
+  String get paramStatement => '${type.typeNameNullability} $name';
 
   String encodingStatement(String accessor) =>
-      type.buildEncodingStatement(accessor, nullable);
+      type.buildEncodingStatement(accessor);
 
   String decodingStatement(String accessor) =>
-      type.buildDecodingStatement(accessor, nullable);
-
-  String get nullabilitySuffix => nullable ? '?' : '';
+      type.buildDecodingStatement(accessor);
 }

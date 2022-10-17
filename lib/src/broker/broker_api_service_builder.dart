@@ -53,8 +53,7 @@ class BrokerApiServiceBuilder {
 
       if (endpoint.isRpc) {
         yield 'final reply = $invocation;';
-        final mapEncode =
-            endpoint.replyType!.buildEncodingStatement('reply', false);
+        final mapEncode = endpoint.replyType!.buildEncodingStatement('reply');
         yield "return {'result': $mapEncode};";
       } else {
         yield '$invocation;';

@@ -30,7 +30,7 @@ class DataBeanField {
     final fieldType = getColumnType(field);
     final fieldLength = getLength(field);
     final fieldNullable = getNullability(field);
-    final layoutName = getLayoutName(field.enclosingElement as ClassElement);
+    final layoutName = getLayoutName(field.enclosingElement3 as ClassElement);
 
     if (isPrimaryKeyField(field)) {
       if (fieldType != FieldType.Int && fieldType != FieldType.String) {
@@ -141,9 +141,9 @@ class DataBeanField {
         (throw Exception('Not a foreign key field.'));
     final foreignType = readTypeField(annotation, 'foreignType')!;
     final fieldElement = findPrimaryKeyField(
-            podoFields(foreignType.element as ClassElement).a.toList()) ??
+            podoFields(foreignType.element2 as ClassElement).a.toList()) ??
         (throw DataBeanException(
-            'DAO "${foreignType.element?.name}" does not provide a primary key.'));
+            'DAO "${foreignType.element2?.name}" does not provide a primary key.'));
     return getDataField(fieldElement) as PrimaryKey;
   }
 
@@ -154,11 +154,11 @@ class DataBeanField {
     }
 
     final foreignType = readTypeField(annotation, 'foreignType')!;
-    final foreignClassElement = foreignType.element as ClassElement;
+    final foreignClassElement = foreignType.element2 as ClassElement;
     final fieldElement = findPrimaryKeyField(
             podoFields(foreignClassElement).a.toList()) ??
         (throw DataBeanException(
-            'DAO "${foreignType.element?.name}" does not provide a primary key.'));
+            'DAO "${foreignType.element2?.name}" does not provide a primary key.'));
     return '${foreignClassElement.name}DataBean.${fieldElement.name}Field';
   }
 
@@ -171,7 +171,7 @@ class DataBeanField {
         .firstWhere((element) => false, orElse: () => null);
 
     if (field.type.isEnum) {
-      final enumType = field.type.element!.name!;
+      final enumType = field.type.element2!.name!;
       if (dataField.nullable) {
         // TODO this could be replaced with tryFindEnum from boost when boost is exported in datahub
         return '$enumType.values.cast<$enumType?>().firstWhere((v) => v.name == ($accessor), orElse: () => null)';

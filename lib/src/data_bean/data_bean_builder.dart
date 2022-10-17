@@ -17,7 +17,7 @@ class DataBeanBuilder {
 
     final primaryKeyField =
         fields.firstOrNullWhere((f) => f.dataField is PrimaryKey);
-    final primaryKeyClass = primaryKeyField?.field.type.element?.name;
+    final primaryKeyClass = primaryKeyField?.field.type.element2?.name;
 
     final baseClass = primaryKeyClass != null
         ? 'PrimaryKeyDataBean<$layoutClass, $primaryKeyClass>'

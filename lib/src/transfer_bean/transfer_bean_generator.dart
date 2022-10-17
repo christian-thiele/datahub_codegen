@@ -17,14 +17,8 @@ class TransferBeanGenerator extends GeneratorForAnnotation<TransferObject> {
     final classFields = podoFields(classElement);
 
     final transferFields = classFields
-        .map((f) => TransferField(
-              f.a.name,
-              f.a.name,
-              TransferFieldType.fromDartType(f.a.type),
-              f.a.type.nullabilitySuffix != NullabilitySuffix.none,
-              null,
-              f.b.isNamed,
-            ))
+        .map((f) => TransferField(f.a.name, f.a.name,
+            TransferFieldType.fromDartType(f.a.type), f.b.isNamed))
         .toList();
 
     yield* TransferBeanBuilder(classElement.name, transferFields).build();

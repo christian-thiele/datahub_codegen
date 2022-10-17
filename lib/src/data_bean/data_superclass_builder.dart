@@ -14,7 +14,7 @@ class DataSuperclassBuilder {
     final fields = daoFields.map(_toDataBeanField).toList();
     final primaryKeyField =
         fields.firstOrNullWhere((f) => f.dataField is PrimaryKey);
-    final primaryKeyClass = primaryKeyField?.field.type.element?.name;
+    final primaryKeyClass = primaryKeyField?.field.type.element2?.name;
 
     final baseClass = primaryKeyClass != null
         ? 'PrimaryKeyDao<$layoutClass, $primaryKeyClass>'
@@ -30,7 +30,7 @@ class DataSuperclassBuilder {
 
   Iterable<String> buildGetPrimaryKeyMethod(
       DataBeanField primaryKeyField) sync* {
-    final primaryKeyClass = primaryKeyField.field.type.element!.name;
+    final primaryKeyClass = primaryKeyField.field.type.element2!.name;
     yield '@override $primaryKeyClass getPrimaryKey() => '
         '(this as $layoutClass).${primaryKeyField.field.name};';
   }

@@ -6,7 +6,7 @@ class DataBeanException implements Exception {
   DataBeanException(this.message);
 
   DataBeanException.invalidType(DartType t)
-      : this('Invalid field type: ${t.element?.name}');
+      : this('Invalid field type: ${t.element2?.name}');
 
   @override
   String toString() => message;
