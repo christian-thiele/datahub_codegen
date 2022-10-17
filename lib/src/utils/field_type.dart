@@ -125,12 +125,18 @@ class ListFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    return 'encodeListTyped<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor)';
+    const lambdaParam = 'e';
+    final encoder =
+        '($lambdaParam) => ${elementType.buildEncodingStatement(lambdaParam)}';
+    return 'encodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, $encoder)';
   }
 
   @override
   String buildDecodingStatement(String valueAccessor) {
-    return 'decodeListTyped<$typeNameNullability, ${elementType.typeName}>($valueAccessor)';
+    const lambdaParam = 'e';
+    final decoder =
+        '($lambdaParam) => ${elementType.buildDecodingStatement(lambdaParam)}';
+    return 'decodeList<$typeNameNullability, ${elementType.typeName}>($valueAccessor, $decoder)';
   }
 }
 
@@ -144,12 +150,18 @@ class MapFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    return 'encodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor)';
+    const lambdaParam = 'e';
+    final encoder =
+        '($lambdaParam) => ${valueType.buildEncodingStatement(lambdaParam)}';
+    return 'encodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $encoder)';
   }
 
   @override
   String buildDecodingStatement(String valueAccessor) {
-    return 'decodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor)';
+    const lambdaParam = 'e';
+    final decoder =
+        '($lambdaParam) => ${valueType.buildDecodingStatement(lambdaParam)}';
+    return 'decodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $decoder)';
   }
 }
 
