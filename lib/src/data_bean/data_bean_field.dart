@@ -1,5 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:boost/boost.dart';
 import 'package:datahub/datahub.dart';
 import 'package:source_gen/source_gen.dart';
@@ -166,10 +167,6 @@ class DataBeanField {
   String getDecodingStatement(String objectName) {
     final accessor = "$objectName['${dataField.name}']";
 
-    FieldType.values
-        .cast<FieldType?>()
-        .firstWhere((element) => false, orElse: () => null);
-
     if (field.type.isEnum) {
       final enumType = field.type.element2!.name!;
       if (dataField.nullable) {
@@ -179,6 +176,20 @@ class DataBeanField {
         // TODO this could be replaced with findEnum from boost when boost is exported in datahub
         return '$enumType.values.firstWhere((v) => v.name == ($accessor))';
       }
+    } else if (field.type.isDartCoreList) {
+      final elementType = (field.type as ParameterizedType).typeArguments.first;
+      final elementTypeNullable =
+          elementType.nullabilitySuffix != NullabilitySuffix.none;
+      final elementTypeName =
+          '${elementType.element2!.name}${elementTypeNullable ? '?' : ''}';
+      return 'decodeListTyped<List<$elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor)';
+    } else if (field.type.isDartCoreMap) {
+      final elementType = (field.type as ParameterizedType).typeArguments[1];
+      final elementTypeNullable =
+          elementType.nullabilitySuffix != NullabilitySuffix.none;
+      final elementTypeName =
+          '${elementType.element2!.name}${elementTypeNullable ? '?' : ''}';
+      return 'decodeMapTyped<Map<String, $elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor)';
     } else {
       return accessor;
     }

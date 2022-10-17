@@ -161,7 +161,7 @@ class MapFieldType extends TransferFieldType {
     const lambdaParam = 'e';
     final decoder =
         '($lambdaParam) => ${valueType.buildDecodingStatement(lambdaParam)}';
-    return 'decodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $decoder)';
+    return 'decodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $decoder)';
   }
 }
 
