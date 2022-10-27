@@ -15,7 +15,7 @@ class CopyWithExtensionBuilder {
   }
 
   Iterable<String> buildCopyWithMethod() sync* {
-    yield '$transferClass copyWith({';
+    yield '$transferClass copyWith(${fields.isNotEmpty ? '{' : ''}';
 
     for (final field in fields) {
       final typeName = field.a.type.getDisplayString(withNullability: false);
@@ -29,7 +29,7 @@ class CopyWithExtensionBuilder {
       }
     }
 
-    yield '}) { return $transferClass(';
+    yield '${fields.isNotEmpty ? '}' : ''}) { return $transferClass(';
 
     for (final field in fields) {
       final fieldName = field.a.name;
