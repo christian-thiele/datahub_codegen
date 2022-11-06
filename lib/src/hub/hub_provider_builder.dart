@@ -37,14 +37,14 @@ class HubProviderBuilder {
         (throw Exception(
             'Resource "${element.getDisplayString(withNullability: false)}" does not provide HubResource annotation.'));
 
-    final returnType = element.getter!.returnType;
+    final returnType = element.getter!.returnType as ParameterizedType;
 
     if (returnType.nullabilitySuffix != NullabilitySuffix.none) {
       throw Exception(
           'Resource "${element.getDisplayString(withNullability: false)}" does not provide HubResource annotation.');
     }
 
-    final transferClass = (returnType as ParameterizedType).typeArguments.first;
+    final transferClass = returnType.typeArguments.first;
     final bean = '${transferClass}TransferBean';
 
     final capitalizedName = _firstUpper(element.name);
@@ -58,7 +58,9 @@ class HubProviderBuilder {
         '${isMutable ? 'MutableResourceAdapter' : 'ResourceAdapter'}'
         '(RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $methods,)';
 
-    final returnTypeName = returnType.getDisplayString(withNullability: false);
+    final returnTypeName = isMutable
+        ? 'MutableResourceProvider<$transferClass>'
+        : 'ResourceProvider<$transferClass>';
 
     yield '@override late final $returnTypeName ${element.name} = $implementation;';
   }
@@ -74,7 +76,7 @@ class HubProviderBuilder {
   Iterable<String> buildResourceListAccessor() sync* {
     final resources = resourceFields.map((e) => e.name).join(', ');
 
-    yield '@override List<Resource> get resources => [$resources,];';
+    yield '@override List<ResourceProvider> get resources => [$resources,];';
   }
 
   Iterable<String> buildResourceMethodStubs() sync* {
@@ -87,22 +89,22 @@ class HubProviderBuilder {
     final isMutable = TypeChecker.fromRuntime(MutableResource)
         .isAssignableFromType(element.type);
 
-    final returnType = element.getter!.returnType;
+    final returnType = element.getter!.returnType as ParameterizedType;
 
     if (returnType.nullabilitySuffix != NullabilitySuffix.none) {
       throw Exception(
           'Resource "${element.getDisplayString(withNullability: false)}" does not provide HubResource annotation.');
     }
 
-    final transferClass = (returnType as ParameterizedType).typeArguments.first;
+    final transferClass = returnType.typeArguments.first;
     final capitalizedName = _firstUpper(element.name);
 
-    yield 'Future<$transferClass> get$capitalizedName(Map<String, String> params);';
+    yield 'Future<$transferClass> get$capitalizedName(ApiRequest request);';
 
     if (isMutable) {
-      yield 'Future<void> set$capitalizedName($transferClass value, Map<String, String> params);';
+      yield 'Future<void> set$capitalizedName(ApiRequest request, $transferClass value);';
     }
 
-    yield 'Stream<$transferClass> get${capitalizedName}Stream(Map<String, String> params);';
+    yield 'Stream<$transferClass> get${capitalizedName}Stream(ApiRequest request);';
   }
 }

@@ -37,21 +37,25 @@ class HubClientBuilder {
         (throw Exception(
             'Resource "${element.name}" does not provide HubResource annotation.'));
 
-    final returnType = element.getter!.returnType;
+    final returnType = element.getter!.returnType as ParameterizedType;
+    final transferClass = returnType.typeArguments.first;
 
     if (returnType.nullabilitySuffix != NullabilitySuffix.none) {
       throw Exception(
           'Resource "${element.name}" getter must be nun-nullable.');
     }
 
-    final transferClass = (returnType as ParameterizedType).typeArguments.first;
     final bean = '${transferClass}TransferBean';
+
+    final params = '{}';
 
     final implementation =
         '${isMutable ? 'MutableResourceRestClient' : 'ResourceRestClient'}'
-        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean,)';
+        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $params,)';
 
-    final returnTypeName = returnType.getDisplayString(withNullability: false);
+    final returnTypeName = isMutable
+        ? 'MutableResourceClient<$transferClass>'
+        : 'ResourceClient<$transferClass>';
 
     yield '@override late final $returnTypeName ${element.name} = $implementation;';
   }
