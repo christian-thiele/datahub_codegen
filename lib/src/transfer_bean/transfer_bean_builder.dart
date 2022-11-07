@@ -7,7 +7,7 @@ class TransferBeanBuilder {
   TransferBeanBuilder(this.transferClass, this.fields);
 
   Iterable<String> build() sync* {
-    yield '// ignore: constant_identifier_names';
+    yield '// ignore_for_file: constant_identifier_names';
     yield 'const ${transferClass}TransferBean = _${transferClass}TransferBeanImpl._();';
     yield 'class _${transferClass}TransferBeanImpl extends TransferBean<$transferClass> {';
     yield* buildConstConstructor();
