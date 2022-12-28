@@ -13,6 +13,7 @@ class DataBeanBuilder {
   DataBeanBuilder(this.layoutClass, this.layoutName, this.daoFields);
 
   Iterable<String> build() sync* {
+    yield '// ignore_for_file: non_constant_identifier_names';
     final fields = daoFields.map(_toDataBeanField).toList();
 
     final primaryKeyField =

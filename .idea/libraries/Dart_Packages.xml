@@ -40,7 +40,7 @@
         <entry key="boost">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.6/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.7/lib" />
             </list>
           </value>
         </entry>
@@ -173,7 +173,7 @@
         <entry key="datahub">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.16.0-dev.30/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.16.2/lib" />
             </list>
           </value>
         </entry>
@@ -591,7 +591,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/async-2.10.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.6/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.7/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/buffer-1.1.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/build-2.3.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/build_config-1.1.1/lib" />
@@ -610,7 +610,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_amqp-0.2.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.2.4/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.16.0-dev.30/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.16.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/file-6.1.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/fixnum-1.0.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/frontend_server_client-3.1.0/lib" />

@@ -1,7 +1,5 @@
 import '../utils/field_type.dart';
 
-import '../utils/utils.dart';
-
 class TransferField {
   final String name;
   final String key;

@@ -1,5 +1,4 @@
 import 'package:datahub/datahub.dart';
-import 'package:datahub/rest_client.dart';
 
 import '../transfer_object/contact.dart';
 

@@ -1,3 +1,6 @@
+## 0.16.1
+- fixed lints in generated files
+
 ## 0.16.0
 - added HubClient Builder
 - added HubProvider Builder
