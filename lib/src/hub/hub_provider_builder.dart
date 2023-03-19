@@ -2,6 +2,7 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:datahub/datahub.dart';
+import 'package:datahub_codegen/src/hub/resource_builders/resource_builder.dart';
 import 'package:datahub_codegen/utils.dart';
 import 'package:source_gen/source_gen.dart';
 
@@ -26,85 +27,20 @@ class HubProviderBuilder {
 
   Iterable<String> buildResourceClientAccessors() sync* {
     for (final field in resourceFields) {
-      yield* buildResourceClientAccessor(field);
+      final builder = ResourceBuilder.get(field.type);
+      yield* builder.buildProviderAccessor(field);
     }
-  }
-
-  Iterable<String> buildResourceClientAccessor(FieldElement element) sync* {
-    final isMutable = TypeChecker.fromRuntime(MutableResource)
-        .isAssignableFromType(element.type);
-    final annotation = getAnnotation(element.getter!, HubResource) ??
-        (throw Exception(
-            'Resource "${element.getDisplayString(withNullability: false)}" does not provide HubResource annotation.'));
-
-    final returnType = element.getter!.returnType as ParameterizedType;
-
-    if (returnType.nullabilitySuffix != NullabilitySuffix.none) {
-      throw Exception(
-          'Resource "${element.getDisplayString(withNullability: false)}" does not provide HubResource annotation.');
-    }
-
-    final transferClass = returnType.typeArguments.first;
-    final bean = '${transferClass}TransferBean';
-
-    final capitalizedName = _firstUpper(element.name);
-    final methods = [
-      'get$capitalizedName',
-      if (isMutable) 'set$capitalizedName',
-      'get${capitalizedName}Stream',
-    ].join(', ');
-
-    final implementation =
-        '${isMutable ? 'MutableResourceAdapter' : 'ResourceAdapter'}'
-        '(RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $methods,)';
-
-    final returnTypeName = isMutable
-        ? 'MutableResourceProvider<$transferClass>'
-        : 'ResourceProvider<$transferClass>';
-
-    yield '@override late final $returnTypeName ${element.name} = $implementation;';
-  }
-
-  String _firstUpper(String value) {
-    if (value.isEmpty) {
-      return value;
-    }
-
-    return value.substring(0, 1).toUpperCase() + value.substring(1);
   }
 
   Iterable<String> buildResourceListAccessor() sync* {
     final resources = resourceFields.map((e) => e.name).join(', ');
-
     yield '@override List<ResourceProvider> get resources => [$resources,];';
   }
 
   Iterable<String> buildResourceMethodStubs() sync* {
     for (final field in resourceFields) {
-      yield* buildSingleResourceMethodStubs(field);
+      final builder = ResourceBuilder.get(field.type);
+      yield* builder.buildProviderMethodStubs(field);
     }
-  }
-
-  Iterable<String> buildSingleResourceMethodStubs(FieldElement element) sync* {
-    final isMutable = TypeChecker.fromRuntime(MutableResource)
-        .isAssignableFromType(element.type);
-
-    final returnType = element.getter!.returnType as ParameterizedType;
-
-    if (returnType.nullabilitySuffix != NullabilitySuffix.none) {
-      throw Exception(
-          'Resource "${element.getDisplayString(withNullability: false)}" does not provide HubResource annotation.');
-    }
-
-    final transferClass = returnType.typeArguments.first;
-    final capitalizedName = _firstUpper(element.name);
-
-    yield 'Future<$transferClass> get$capitalizedName(ApiRequest request);';
-
-    if (isMutable) {
-      yield 'Future<void> set$capitalizedName(ApiRequest request, $transferClass value);';
-    }
-
-    yield 'Stream<$transferClass> get${capitalizedName}Stream(ApiRequest request);';
   }
 }
