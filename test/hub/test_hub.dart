@@ -7,8 +7,11 @@ part 'test_hub.g.dart';
 @Hub()
 abstract class TestHub {
   @HubResource('/contact/{id}')
-  Resource<Contact> get contact;
+  ElementResource<Contact> get contact;
 
   @HubResource('/self')
-  MutableResource<Contact> get self;
+  MutableElementResource<Contact> get self;
+
+  @HubResource('/contacts')
+  CollectionResource<Contact, String> get contacts;
 }

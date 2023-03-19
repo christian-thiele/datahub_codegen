@@ -105,8 +105,13 @@ extension DartTypeExtension on DartType {
         null;
   }
 
-  bool get isResource =>
-      TypeChecker.fromRuntime(Resource).isAssignableFromType(this);
+  static const _resourceBaseTypes = [
+    Resource,
+    CollectionResource,
+  ];
+
+  bool get isResource => _resourceBaseTypes
+      .any((t) => TypeChecker.fromRuntime(t).isAssignableFromType(this));
 
   bool get isDartCoreDateTime =>
       TypeChecker.fromRuntime(DateTime).isExactlyType(this);
@@ -167,4 +172,14 @@ DartType? readTypeField(DartObject? element, String fieldName) {
 String getLayoutName(ClassElement element) {
   final annotation = getAnnotation(element, DaoType);
   return readField<String>(annotation, 'name') ?? element.name.toLowerCase();
+}
+
+extension StringExtension on String {
+  String get firstUpper {
+    if (isEmpty) {
+      return this;
+    }
+
+    return substring(0, 1).toUpperCase() + substring(1);
+  }
 }
