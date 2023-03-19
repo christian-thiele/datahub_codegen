@@ -1,9 +1,9 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
-import 'package:datahub/datahub.dart';
-import 'package:datahub_codegen/utils.dart';
+import 'package:datahub_codegen/src/hub/resource_builders/collection_resource_builder.dart';
 import 'package:source_gen/source_gen.dart';
+
+import 'resource_builders/resource_builder.dart';
 
 class HubClientBuilder {
   final String hubClass;
@@ -25,38 +25,7 @@ class HubClientBuilder {
 
   Iterable<String> buildResourceClientAccessors() sync* {
     for (final field in resourceFields) {
-      yield* buildResourceClientAccessor(field);
+      yield* ResourceBuilder.get(field.type).buildClientAccessor(field);
     }
-  }
-
-  Iterable<String> buildResourceClientAccessor(FieldElement element) sync* {
-    final isMutable = TypeChecker.fromRuntime(MutableResource)
-        .isAssignableFromType(element.type);
-
-    final annotation = getAnnotation(element.getter!, HubResource) ??
-        (throw Exception(
-            'Resource "${element.name}" does not provide HubResource annotation.'));
-
-    final returnType = element.getter!.returnType as ParameterizedType;
-    final transferClass = returnType.typeArguments.first;
-
-    if (returnType.nullabilitySuffix != NullabilitySuffix.none) {
-      throw Exception(
-          'Resource "${element.name}" getter must be nun-nullable.');
-    }
-
-    final bean = '${transferClass}TransferBean';
-
-    final params = '{}';
-
-    final implementation =
-        '${isMutable ? 'MutableResourceRestClient' : 'ResourceRestClient'}'
-        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $params,)';
-
-    final returnTypeName = isMutable
-        ? 'MutableResourceClient<$transferClass>'
-        : 'ResourceClient<$transferClass>';
-
-    yield '@override late final $returnTypeName ${element.name} = $implementation;';
   }
 }

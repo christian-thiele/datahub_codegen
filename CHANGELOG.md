@@ -1,3 +1,7 @@
+## 0.17.0
+- refactored hub builders
+- added builder for CollectionResource
+
 ## 0.16.1
 - fixed lints in generated files
 
