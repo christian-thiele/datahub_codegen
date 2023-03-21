@@ -1,3 +1,6 @@
+## 0.16.4
+- fixed Enum field types
+
 ## 0.16.3
 - updated dependencies
 
