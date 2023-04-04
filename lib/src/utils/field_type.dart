@@ -16,8 +16,8 @@ abstract class TransferFieldType {
     return 'encodeTyped<$typeNameNullability>($valueAccessor)';
   }
 
-  String buildDecodingStatement(String valueAccessor) {
-    return 'decodeTyped<$typeNameNullability>($valueAccessor)';
+  String buildDecodingStatement(String valueAccessor, String nameAccessor) {
+    return 'decodeTyped<$typeNameNullability>($valueAccessor, name: $nameAccessor)';
   }
 
   factory TransferFieldType.fromDartType(DartType type) {
@@ -132,11 +132,11 @@ class ListFieldType extends TransferFieldType {
   }
 
   @override
-  String buildDecodingStatement(String valueAccessor) {
+  String buildDecodingStatement(String valueAccessor, String nameAccessor) {
     const lambdaParam = 'e';
     final decoder =
-        '($lambdaParam) => ${elementType.buildDecodingStatement(lambdaParam)}';
-    return 'decodeList<$typeNameNullability, ${elementType.typeName}>($valueAccessor, $decoder)';
+        '($lambdaParam, n) => ${elementType.buildDecodingStatement(lambdaParam, 'n')}';
+    return 'decodeList<$typeNameNullability, ${elementType.typeName}>($valueAccessor, $decoder, name: $nameAccessor)';
   }
 }
 
@@ -157,11 +157,11 @@ class MapFieldType extends TransferFieldType {
   }
 
   @override
-  String buildDecodingStatement(String valueAccessor) {
+  String buildDecodingStatement(String valueAccessor, String nameAccessor) {
     const lambdaParam = 'e';
     final decoder =
-        '($lambdaParam) => ${valueType.buildDecodingStatement(lambdaParam)}';
-    return 'decodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $decoder)';
+        '($lambdaParam, n) => ${valueType.buildDecodingStatement(lambdaParam, 'n')}';
+    return 'decodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $decoder, name: $nameAccessor)';
   }
 }
 
@@ -177,8 +177,9 @@ class ObjectFieldType extends TransferFieldType {
   }
 
   @override
-  String buildDecodingStatement(String valueAccessor) {
-    final decode = '${typeName}TransferBean.toObject($valueAccessor)';
+  String buildDecodingStatement(String valueAccessor, String nameAccessor) {
+    final decode =
+        '${typeName}TransferBean.toObject($valueAccessor, name: $nameAccessor)';
 
     if (nullable) {
       return '(($valueAccessor) != null) ? $decode : null';
@@ -204,11 +205,11 @@ class EnumFieldType extends TransferFieldType {
   }
 
   @override
-  String buildDecodingStatement(String valueAccessor) {
+  String buildDecodingStatement(String valueAccessor, String nameAccessor) {
     if (nullable) {
-      return 'decodeEnumNullable($valueAccessor, $typeName.values)';
+      return 'decodeEnumNullable($valueAccessor, $typeName.values, name: $nameAccessor)';
     }
 
-    return 'decodeEnum($valueAccessor, $typeName.values)';
+    return 'decodeEnum($valueAccessor, $typeName.values, name: $nameAccessor)';
   }
 }

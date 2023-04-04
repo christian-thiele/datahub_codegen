@@ -13,8 +13,11 @@ class TransferField {
     return type.buildEncodingStatement(fieldAccessor);
   }
 
-  String buildDecodingStatement(String dataMapAccessor) {
+  String buildDecodingStatement(
+      String dataMapAccessor, String namespaceAccessor) {
     final keyAccessor = "$dataMapAccessor['$key']";
-    return type.buildDecodingStatement(keyAccessor);
+    final nameAccessor =
+        "$namespaceAccessor == null ? '$name' : '\$$namespaceAccessor.$name'";
+    return type.buildDecodingStatement(keyAccessor, nameAccessor);
   }
 }

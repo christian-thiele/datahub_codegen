@@ -72,8 +72,8 @@ class BaseApiClientBuilder {
           "replyPayload['errorCode'] : 500;";
       yield "throw ApiRequestException(errorCode, replyPayload['error'].toString());";
       yield '}';
-      final decode =
-          endpoint.replyType!.buildDecodingStatement("replyPayload['result']");
+      final decode = endpoint.replyType!
+          .buildDecodingStatement("replyPayload['result']", 'null');
       yield 'return $decode;';
     } else {
       yield "_exchange.publish(jsonPayload, '', properties: MessageProperties()"

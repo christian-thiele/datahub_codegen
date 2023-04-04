@@ -1,3 +1,7 @@
+## 0.16.2
+- TransferBean
+  - added debug property name for error messages
+
 ## 0.16.1
 - fixed lints in generated files
 

@@ -33,9 +33,9 @@ class TransferBeanBuilder {
 
   Iterable<String> buildToObjectMethod() sync* {
     final mapName = 'data';
-    yield '@override $transferClass toObject(Map<String, dynamic> $mapName) { return $transferClass(';
+    yield '@override $transferClass toObject(Map<String, dynamic> $mapName, {String? name}) { return $transferClass(';
     for (final field in fields) {
-      final decodingStatement = field.buildDecodingStatement(mapName);
+      final decodingStatement = field.buildDecodingStatement(mapName, 'name');
       if (field.named) {
         yield '${field.name}: $decodingStatement,';
       } else {

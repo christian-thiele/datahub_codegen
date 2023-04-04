@@ -18,5 +18,5 @@ class EndpointParam {
       type.buildEncodingStatement(accessor);
 
   String decodingStatement(String accessor) =>
-      type.buildDecodingStatement(accessor);
+      type.buildDecodingStatement(accessor, "'$name'");
 }
