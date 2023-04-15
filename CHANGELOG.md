@@ -1,3 +1,6 @@
+## 0.16.3
+- updated dependencies
+
 ## 0.16.2
 - TransferBean
   - added debug property name for error messages
