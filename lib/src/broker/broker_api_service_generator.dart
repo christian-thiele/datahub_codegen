@@ -29,7 +29,7 @@ class BrokerApiServiceGenerator extends GeneratorForAnnotation<BrokerApi> {
 
     final implMethods = classElement.methods.where((m) => !m.isPrivate);
     final intMethods =
-        classElement.supertype!.element2.methods.where((m) => !m.isPrivate);
+        classElement.supertype!.element.methods.where((m) => !m.isPrivate);
 
     // Use implementation method (for return type, which can differ for void / Future<void>)
     // combined with the parameter names of the interface to avoid runtime errors when parsing
@@ -60,7 +60,7 @@ class BrokerApiServiceGenerator extends GeneratorForAnnotation<BrokerApi> {
           'BrokerApi annotated class must extend BrokerInterface annotated class.');
     }
     final interfaceAnnotation =
-        getAnnotation(supertype.element2, BrokerInterface);
+        getAnnotation(supertype.element, BrokerInterface);
     if (interfaceAnnotation == null) {
       throw Exception(
           'BrokerApi annotated class must extend BrokerInterface annotated class.');

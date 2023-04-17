@@ -50,11 +50,11 @@ abstract class TransferFieldType {
       return MapFieldType(
           TransferFieldType.fromDartType(args.elementAt(1)), nullable);
     } else if (type.isTransferObject) {
-      return ObjectFieldType(type.element2!.name!, nullable);
+      return ObjectFieldType(type.element!.name!, nullable);
     } else if (type.isEnum) {
-      return EnumFieldType(type.element2!.name!, nullable);
+      return EnumFieldType(type.element!.name!, nullable);
     } else {
-      throw Exception('Invalid field type ${type.element2?.name}.');
+      throw Exception('Invalid field type ${type.element?.name}.');
     }
   }
 }

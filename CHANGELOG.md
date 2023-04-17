@@ -1,3 +1,6 @@
+## 0.16.5
+- analyzer api fixes
+
 ## 0.16.4
 - fixed Enum field types
 

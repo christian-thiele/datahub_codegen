@@ -142,9 +142,9 @@ class DataBeanField {
         (throw Exception('Not a foreign key field.'));
     final foreignType = readTypeField(annotation, 'foreignType')!;
     final fieldElement = findPrimaryKeyField(
-            podoFields(foreignType.element2 as ClassElement).a.toList()) ??
+            podoFields(foreignType.element as ClassElement).a.toList()) ??
         (throw DataBeanException(
-            'DAO "${foreignType.element2?.name}" does not provide a primary key.'));
+            'DAO "${foreignType.element?.name}" does not provide a primary key.'));
     return getDataField(fieldElement) as PrimaryKey;
   }
 
@@ -155,11 +155,11 @@ class DataBeanField {
     }
 
     final foreignType = readTypeField(annotation, 'foreignType')!;
-    final foreignClassElement = foreignType.element2 as ClassElement;
+    final foreignClassElement = foreignType.element as ClassElement;
     final fieldElement = findPrimaryKeyField(
             podoFields(foreignClassElement).a.toList()) ??
         (throw DataBeanException(
-            'DAO "${foreignType.element2?.name}" does not provide a primary key.'));
+            'DAO "${foreignType.element?.name}" does not provide a primary key.'));
     return '${foreignClassElement.name}DataBean.${fieldElement.name}Field';
   }
 
@@ -168,7 +168,7 @@ class DataBeanField {
     final accessor = "$objectName['${dataField.name}']";
 
     if (field.type.isEnum) {
-      final enumType = field.type.element2!.name!;
+      final enumType = field.type.element!.name!;
       if (dataField.nullable) {
         // TODO this could be replaced with tryFindEnum from boost when boost is exported in datahub
         return '$enumType.values.cast<$enumType?>().firstWhere((v) => v.name == ($accessor), orElse: () => null)';
@@ -181,14 +181,14 @@ class DataBeanField {
       final elementTypeNullable =
           elementType.nullabilitySuffix != NullabilitySuffix.none;
       final elementTypeName =
-          '${elementType.element2!.name}${elementTypeNullable ? '?' : ''}';
+          '${elementType.element!.name}${elementTypeNullable ? '?' : ''}';
       return 'decodeListTyped<List<$elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor)';
     } else if (field.type.isDartCoreMap) {
       final elementType = (field.type as ParameterizedType).typeArguments[1];
       final elementTypeNullable =
           elementType.nullabilitySuffix != NullabilitySuffix.none;
       final elementTypeName =
-          '${elementType.element2!.name}${elementTypeNullable ? '?' : ''}';
+          '${elementType.element!.name}${elementTypeNullable ? '?' : ''}';
       return 'decodeMapTyped<Map<String, $elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor)';
     } else {
       return accessor;

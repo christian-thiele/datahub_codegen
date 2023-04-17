@@ -85,23 +85,23 @@ FieldElement? findTransferIdField(ClassElement element) {
 extension DartTypeExtension on DartType {
   /// Checks if [type] is a [TransferObject] annotated class.
   bool get isTransferObject {
-    if (element2 == null) {
+    if (element == null) {
       return false;
     }
 
     return TypeChecker.fromRuntime(TransferObject)
-            .firstAnnotationOfExact(element2!, throwOnUnresolved: false) !=
+            .firstAnnotationOfExact(element!, throwOnUnresolved: false) !=
         null;
   }
 
   /// Checks if [type] is a [Hub] annotated class.
   bool get isHub {
-    if (element2 == null) {
+    if (element == null) {
       return false;
     }
 
     return TypeChecker.fromRuntime(Hub)
-            .firstAnnotationOfExact(element2!, throwOnUnresolved: false) !=
+            .firstAnnotationOfExact(element!, throwOnUnresolved: false) !=
         null;
   }
 
@@ -114,7 +114,7 @@ extension DartTypeExtension on DartType {
   bool get isDartCoreDuration =>
       TypeChecker.fromRuntime(Duration).isExactlyType(this);
 
-  bool get isEnum => element2 is EnumElement;
+  bool get isEnum => element is EnumElement;
 
   bool get isUint8List =>
       TypeChecker.fromRuntime(Uint8List).isExactlyType(this);
