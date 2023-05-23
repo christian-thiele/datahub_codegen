@@ -22,7 +22,7 @@ abstract class TransferFieldType {
 
   factory TransferFieldType.fromDartType(DartType type) {
     final nullable = type.nullabilitySuffix != NullabilitySuffix.none;
-    if (type.isDynamic) {
+    if (type is DynamicType) {
       return DynamicFieldType();
     } else if (type.isDartCoreString) {
       return StringFieldType(nullable);

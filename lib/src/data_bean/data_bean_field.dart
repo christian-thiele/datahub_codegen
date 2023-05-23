@@ -31,7 +31,7 @@ class DataBeanField {
     final fieldType = getColumnType(field);
     final fieldLength = getLength(field);
     final fieldNullable = getNullability(field);
-    final layoutName = getLayoutName(field.enclosingElement3 as ClassElement);
+    final layoutName = getLayoutName(field.enclosingElement as ClassElement);
 
     if (isPrimaryKeyField(field)) {
       if (fieldType != FieldType.Int && fieldType != FieldType.String) {
