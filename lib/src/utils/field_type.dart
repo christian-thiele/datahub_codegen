@@ -130,7 +130,12 @@ class ListFieldType extends TransferFieldType {
 
   @override
   String buildDecodingStatement(String valueAccessor, String nameAccessor) {
-    return 'decodeListTyped<$typeNameNullability, ${elementType.typeName}>($valueAccessor, name: $nameAccessor)';
+    if (elementType is ObjectFieldType) {
+      final decodingStatement = elementType.buildDecodingStatement('v', 'n');
+      return 'decodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, (v, n) => $decodingStatement, name: $nameAccessor)';
+    } else {
+      return 'decodeListTyped<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, name: $nameAccessor)';
+    }
   }
 }
 
@@ -149,7 +154,12 @@ class MapFieldType extends TransferFieldType {
 
   @override
   String buildDecodingStatement(String valueAccessor, String nameAccessor) {
-    return 'decodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, name: $nameAccessor)';
+    if (valueType is ObjectFieldType) {
+      final decodingStatement = valueType.buildDecodingStatement('v', 'n');
+      return 'decodeList<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, (v, n) => $decodingStatement, name: $nameAccessor)';
+    } else {
+      return 'decodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, name: $nameAccessor)';
+    }
   }
 }
 
