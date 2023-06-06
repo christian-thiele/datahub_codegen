@@ -125,7 +125,12 @@ class ListFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    return 'encodeListTyped<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor)';
+    if (elementType is ObjectFieldType) {
+      final encodingStatement = elementType.buildEncodingStatement('v');
+      return 'encodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, (v) => $encodingStatement)';
+    } else {
+      return 'encodeListTyped<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor)';
+    }
   }
 
   @override
@@ -149,7 +154,12 @@ class MapFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    return 'encodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor)';
+    if (valueType is ObjectFieldType) {
+      final encodingStatement = valueType.buildEncodingStatement('v');
+      return 'encodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, (v) => $encodingStatement)';
+    } else {
+      return 'encodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor)';
+    }
   }
 
   @override

@@ -1,10 +1,5 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/nullability_suffix.dart';
-import 'package:analyzer/dart/element/type.dart';
-import 'package:datahub/datahub.dart';
 import 'package:datahub_codegen/src/hub/resource_builders/resource_builder.dart';
-import 'package:datahub_codegen/utils.dart';
-import 'package:source_gen/source_gen.dart';
 
 class HubProviderBuilder {
   final String hubClass;
