@@ -31,7 +31,7 @@ class DataBeanField {
     final fieldType = getColumnType(field);
     final fieldLength = getLength(field);
     final fieldNullable = getNullability(field);
-    final layoutName = getLayoutName(field.enclosingElement3 as ClassElement);
+    final layoutName = getLayoutName(field.enclosingElement as ClassElement);
 
     if (isPrimaryKeyField(field)) {
       if (fieldType != FieldType.Int && fieldType != FieldType.String) {
@@ -89,7 +89,7 @@ class DataBeanField {
       return FieldType.Bytes;
     } else if (TypeChecker.fromRuntime(Point).isExactlyType(fieldType)) {
       return FieldType.Point;
-    } else if (fieldType.isJsonType) {
+    } else if (fieldType.isJsonType || fieldType.isTransferObject) {
       return FieldType.Json;
     } else if (fieldType.isEnum) {
       return FieldType.String;
@@ -163,6 +163,25 @@ class DataBeanField {
     return '${foreignClassElement.name}DataBean.${fieldElement.name}Field';
   }
 
+  String getEncodingStatement(String accessor) {
+    if (field.type.isDartCoreList) {
+      final elementType = (field.type as ParameterizedType).typeArguments.first;
+      if (elementType.isTransferObject) {
+        final elementTypeNullable =
+            elementType.nullabilitySuffix != NullabilitySuffix.none;
+        final elementTypeName =
+            '${elementType.element!.name}${elementTypeNullable ? '?' : ''}';
+        return 'encodeList<List<$elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor, (v) => v${elementTypeNullable ? '?' : ''}.toJson())';
+      }
+    }
+
+    if (field.type.isTransferObject) {
+      return '$accessor${dataField.nullable ? '?' : ''}.toJson()';
+    }
+
+    return accessor;
+  }
+
   /// Get statement for decoding field type value from map object.
   String getDecodingStatement(String objectName) {
     final accessor = "$objectName['${dataField.name}']";
@@ -182,6 +201,17 @@ class DataBeanField {
           elementType.nullabilitySuffix != NullabilitySuffix.none;
       final elementTypeName =
           '${elementType.element!.name}${elementTypeNullable ? '?' : ''}';
+
+      if (elementType.isTransferObject) {
+        final decodeNonNull =
+            '${elementType.element!.name}TransferBean.toObject(v, name: n)';
+        final decode = elementTypeNullable
+            ? '$accessor != null ? $decodeNonNull : null'
+            : decodeNonNull;
+
+        return 'decodeList<List<$elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor, (v, n) => $decode)';
+      }
+
       return 'decodeListTyped<List<$elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor)';
     } else if (field.type.isDartCoreMap) {
       final elementType = (field.type as ParameterizedType).typeArguments[1];
@@ -190,6 +220,14 @@ class DataBeanField {
       final elementTypeName =
           '${elementType.element!.name}${elementTypeNullable ? '?' : ''}';
       return 'decodeMapTyped<Map<String, $elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor)';
+    } else if (field.type.isTransferObject) {
+      final decode =
+          "${field.type.element!.name}TransferBean.toObject($accessor, name: '${field.name}')";
+      if (field.type.nullabilitySuffix != NullabilitySuffix.none) {
+        return '$accessor != null ? $decode : null';
+      } else {
+        return decode;
+      }
     } else {
       return accessor;
     }

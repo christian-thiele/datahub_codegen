@@ -51,7 +51,7 @@ class DataBeanBuilder {
       if (field.dataField is PrimaryKey) {
         yield 'if (includePrimaryKey)';
       }
-      yield "'${field.dataField.name}': $objectName.${field.valueAccessor},";
+      yield "'${field.dataField.name}': ${field.getEncodingStatement('$objectName.${field.valueAccessor}')},";
     }
     yield '}; }';
   }

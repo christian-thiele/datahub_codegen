@@ -1,5 +1,7 @@
 import 'package:datahub/datahub.dart';
 
+import '../transfer_object/contact.dart';
+
 part 'json_fields.g.dart';
 
 @DaoType(name: 'json_fields')
@@ -16,6 +18,12 @@ class JsonFields extends _Dao {
   final Map<String, String> typedMap;
   final Map<String, String>? typedMapNullable;
 
+  final Contact contact;
+  final Contact? contactNullable;
+  final List<Contact> contacts;
+  final List<Contact?> contactsNullable;
+  final List<Contact>? contactsNullable2;
+
   JsonFields({
     required this.dynamicList,
     required this.dynamicListNullable,
@@ -25,5 +33,10 @@ class JsonFields extends _Dao {
     required this.dynamicMapNullable,
     required this.typedMap,
     required this.typedMapNullable,
+    required this.contact,
+    required this.contactNullable,
+    required this.contacts,
+    required this.contactsNullable,
+    required this.contactsNullable2,
   });
 }

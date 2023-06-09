@@ -1,6 +1,8 @@
 ## 0.17.0
 - refactored hub builders
 - added builder for CollectionResource
+- DataBeanBuilder
+  - support for TransferObjects as JSON fields
 
 ## 0.16.5
 - analyzer api fixes
