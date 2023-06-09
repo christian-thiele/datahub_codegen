@@ -22,7 +22,7 @@ abstract class TransferFieldType {
 
   factory TransferFieldType.fromDartType(DartType type) {
     final nullable = type.nullabilitySuffix != NullabilitySuffix.none;
-    if (type.isDynamic) {
+    if (type is DynamicType) {
       return DynamicFieldType();
     } else if (type.isDartCoreString) {
       return StringFieldType(nullable);
@@ -125,18 +125,22 @@ class ListFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    const lambdaParam = 'e';
-    final encoder =
-        '($lambdaParam) => ${elementType.buildEncodingStatement(lambdaParam)}';
-    return 'encodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, $encoder)';
+    if (elementType is ObjectFieldType) {
+      final encodingStatement = elementType.buildEncodingStatement('v');
+      return 'encodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, (v) => $encodingStatement)';
+    } else {
+      return 'encodeListTyped<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor)';
+    }
   }
 
   @override
   String buildDecodingStatement(String valueAccessor, String nameAccessor) {
-    const lambdaParam = 'e';
-    final decoder =
-        '($lambdaParam, n) => ${elementType.buildDecodingStatement(lambdaParam, 'n')}';
-    return 'decodeList<$typeNameNullability, ${elementType.typeName}>($valueAccessor, $decoder, name: $nameAccessor)';
+    if (elementType is ObjectFieldType) {
+      final decodingStatement = elementType.buildDecodingStatement('v', 'n');
+      return 'decodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, (v, n) => $decodingStatement, name: $nameAccessor)';
+    } else {
+      return 'decodeListTyped<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, name: $nameAccessor)';
+    }
   }
 }
 
@@ -150,18 +154,22 @@ class MapFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    const lambdaParam = 'e';
-    final encoder =
-        '($lambdaParam) => ${valueType.buildEncodingStatement(lambdaParam)}';
-    return 'encodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $encoder)';
+    if (valueType is ObjectFieldType) {
+      final encodingStatement = valueType.buildEncodingStatement('v');
+      return 'encodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, (v) => $encodingStatement)';
+    } else {
+      return 'encodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor)';
+    }
   }
 
   @override
   String buildDecodingStatement(String valueAccessor, String nameAccessor) {
-    const lambdaParam = 'e';
-    final decoder =
-        '($lambdaParam, n) => ${valueType.buildDecodingStatement(lambdaParam, 'n')}';
-    return 'decodeMap<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, $decoder, name: $nameAccessor)';
+    if (valueType is ObjectFieldType) {
+      final decodingStatement = valueType.buildDecodingStatement('v', 'n');
+      return 'decodeList<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, (v, n) => $decodingStatement, name: $nameAccessor)';
+    } else {
+      return 'decodeMapTyped<$typeNameNullability, ${valueType.typeNameNullability}>($valueAccessor, name: $nameAccessor)';
+    }
   }
 }
 

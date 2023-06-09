@@ -1,7 +1,6 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
-import 'package:datahub_codegen/src/hub/resource_builders/collection_resource_builder.dart';
-import 'package:source_gen/source_gen.dart';
+
+import 'resource_builders/resource_builder.dart';
 
 import 'resource_builders/resource_builder.dart';
 

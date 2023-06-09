@@ -1,6 +1,7 @@
 ## 0.17.0
 - refactored hub builders
 - added builder for CollectionResource
+- encodeMapTyped / encodeListTyped
 - DataBeanBuilder
   - support for TransferObjects as JSON fields
 
