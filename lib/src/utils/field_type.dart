@@ -125,7 +125,7 @@ class ListFieldType extends TransferFieldType {
 
   @override
   String buildEncodingStatement(String valueAccessor) {
-    if (elementType is ObjectFieldType) {
+    if (elementType is ObjectFieldType || elementType is EnumFieldType) {
       final encodingStatement = elementType.buildEncodingStatement('v');
       return 'encodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, (v) => $encodingStatement)';
     } else {
@@ -135,7 +135,7 @@ class ListFieldType extends TransferFieldType {
 
   @override
   String buildDecodingStatement(String valueAccessor, String nameAccessor) {
-    if (elementType is ObjectFieldType) {
+    if (elementType is ObjectFieldType || elementType is EnumFieldType) {
       final decodingStatement = elementType.buildDecodingStatement('v', 'n');
       return 'decodeList<$typeNameNullability, ${elementType.typeNameNullability}>($valueAccessor, (v, n) => $decodingStatement, name: $nameAccessor)';
     } else {

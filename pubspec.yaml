@@ -1,6 +1,6 @@
 name: datahub_codegen
 description: DataHub Code Generation Lib
-version: 0.17.0-dev.8
+version: 0.17.0-dev.9
 homepage: https://datahubproject.net
 
 environment:
