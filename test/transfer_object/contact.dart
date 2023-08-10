@@ -15,6 +15,7 @@ class Contact extends _TransferObject {
   final ContactType type;
   final List<int> intList;
   final List<JsonFields> jsonFieldList;
+  final List<ContactType> enumList;
 
   Contact(
     this.id,
@@ -24,5 +25,6 @@ class Contact extends _TransferObject {
     this.intList,
     this.jsonFieldList,
     this.type,
+    this.enumList,
   );
 }
