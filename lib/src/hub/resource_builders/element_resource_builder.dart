@@ -31,11 +31,9 @@ class ElementResourceBuilder extends ResourceBuilder {
 
     final bean = '${transferClass}TransferBean';
 
-    final params = '{}';
-
     final implementation =
         '${isMutable ? 'MutableElementResourceRestClient' : 'ElementResourceRestClient'}'
-        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $params,)';
+        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean,)';
 
     final returnTypeName = isMutable
         ? 'MutableElementResourceClient<$transferClass>'

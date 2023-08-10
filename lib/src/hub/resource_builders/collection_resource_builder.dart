@@ -31,7 +31,7 @@ class CollectionResourceBuilder extends ResourceBuilder {
     final params = '{}';
 
     final implementation = '${'CollectionResourceRestClient'}'
-        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $params,)';
+        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean,)';
 
     final returnTypeName = 'CollectionResourceClient<$transferClass, $idClass>';
     yield '@override late final $returnTypeName ${element.name} = $implementation;';
@@ -50,7 +50,7 @@ class CollectionResourceBuilder extends ResourceBuilder {
     final capitalizedName = element.name.firstUpper;
     final idClass = returnType.typeArguments[1];
 
-    yield 'Stream<CollectionEvent<$transferClass, $idClass>> get${capitalizedName}Window(ApiRequest request, int offset, int length);';
+    yield 'Stream<CollectionWindowEvent<$transferClass, $idClass>> get${capitalizedName}Window(ApiRequest request, int offset, int length);';
   }
 
   @override
