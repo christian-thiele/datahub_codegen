@@ -2,8 +2,6 @@ import 'package:analyzer/dart/element/element.dart';
 
 import 'resource_builders/resource_builder.dart';
 
-import 'resource_builders/resource_builder.dart';
-
 class HubClientBuilder {
   final String hubClass;
   final List<FieldElement> resourceFields;
@@ -13,13 +11,14 @@ class HubClientBuilder {
   Iterable<String> build() sync* {
     yield 'class ${hubClass}Client extends HubClient<$hubClass> implements $hubClass {';
     yield 'final RestClient _client;';
+    yield 'final String basePath;';
     yield* buildConstructor();
     yield* buildResourceClientAccessors();
     yield '}';
   }
 
   Iterable<String> buildConstructor() sync* {
-    yield '${hubClass}Client(this._client);';
+    yield '${hubClass}Client(this._client, {this.basePath = \'\'});';
   }
 
   Iterable<String> buildResourceClientAccessors() sync* {

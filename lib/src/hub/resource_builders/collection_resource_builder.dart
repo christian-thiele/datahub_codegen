@@ -28,10 +28,9 @@ class CollectionResourceBuilder extends ResourceBuilder {
     }
 
     final bean = '${transferClass}TransferBean';
-    final params = '{}';
 
-    final implementation = '${'CollectionResourceRestClient'}'
-        '(_client, RoutePattern(\'${readField(annotation, 'path')}\'), $bean,)';
+    final implementation = 'CollectionResourceRestClient'
+        '(_client, RoutePattern(\'\$basePath${readField(annotation, 'path')}\'), $bean,)';
 
     final returnTypeName = 'CollectionResourceClient<$transferClass, $idClass>';
     yield '@override late final $returnTypeName ${element.name} = $implementation;';
