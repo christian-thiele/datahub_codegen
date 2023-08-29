@@ -21,14 +21,6 @@ targets:
         enabled: true
         generate_for:
           - test/**
-      datahub_codegen:broker_api_service_generator:
-        enabled: true
-        generate_for:
-          - test/**
-      datahub_codegen:broker_api_client_generator:
-        enabled: true
-        generate_for:
-          - test/**
       datahub_codegen:hub_client_generator:
         enabled: true
         generate_for:
@@ -71,20 +63,6 @@ builders:
     import: "package:datahub_codegen/builder.dart"
     builder_factories: ["copyWithExtensionGenerator"]
     build_extensions: {".dart": [".cwe.g.part"]}
-    auto_apply: dependents
-    build_to: cache
-    applies_builders: ["source_gen|combining_builder"]
-  broker_api_service_generator:
-    import: "package:datahub_codegen/builder.dart"
-    builder_factories: ["brokerApiServiceGenerator"]
-    build_extensions: {".dart": [".bas.g.part"]}
-    auto_apply: dependents
-    build_to: cache
-    applies_builders: ["source_gen|combining_builder"]
-  broker_api_client_generator:
-    import: "package:datahub_codegen/builder.dart"
-    builder_factories: ["brokerApiClientGenerator"]
-    build_extensions: {".dart": [".bac.g.part"]}
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen|combining_builder"]
