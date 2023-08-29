@@ -1,17 +1,17 @@
 name: datahub_codegen
 description: DataHub Code Generation Lib
-version: 0.17.0-dev.12
+version: 0.17.0-dev.13
 homepage: https://datahubproject.net
 
 environment:
   sdk: '>=2.17.1 <4.0.0'
 
 dependencies:
-   analyzer: ^6.1.0
-   boost: ^1.8.9
-   build: ^2.3.0
-   datahub: '>=0.17.0-dev.30 <1.0.0'
-   source_gen: ^1.2.7
+  analyzer: ^5.13.0
+  boost: ^1.8.9
+  build: ^2.3.0
+  datahub: '>=0.17.0-dev.31 <1.0.0'
+  source_gen: ^1.2.7
 
 dev_dependencies:
   lints: ^2.0.0

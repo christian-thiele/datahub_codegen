@@ -1,9 +1,6 @@
 import 'package:build/build.dart';
 import 'package:source_gen/source_gen.dart';
 
-import 'src/broker/broker_api_service_generator.dart';
-import 'src/broker/broker_api_client_generator.dart';
-
 import 'src/copy_with/copy_with_extension_generator.dart';
 
 import 'src/transfer_bean/transfer_bean_generator.dart';
@@ -29,12 +26,6 @@ Builder dataSuperclassGenerator(BuilderOptions options) =>
 
 Builder copyWithExtensionGenerator(BuilderOptions options) =>
     SharedPartBuilder([CopyWithExtensionGenerator()], 'cwe');
-
-Builder brokerApiServiceGenerator(BuilderOptions options) =>
-    SharedPartBuilder([BrokerApiServiceGenerator()], 'bas');
-
-Builder brokerApiClientGenerator(BuilderOptions options) =>
-    SharedPartBuilder([BrokerApiClientGenerator()], 'bac');
 
 Builder hubClientGenerator(BuilderOptions options) =>
     SharedPartBuilder([HubClientGenerator()], 'hrc');

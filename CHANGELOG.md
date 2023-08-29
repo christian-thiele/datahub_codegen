@@ -4,6 +4,7 @@
 - encodeMapTyped / encodeListTyped
 - DataBeanBuilder
   - support for TransferObjects as JSON fields
+- remove legacy BrokerApi builders
 
 ## 0.16.5
 - analyzer api fixes
