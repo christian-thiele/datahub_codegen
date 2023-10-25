@@ -1,19 +1,22 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:boost/boost.dart';
 import 'package:datahub/datahub.dart';
+import 'package:datahub_codegen/src/data_bean/field_description.dart';
 
 import 'data_bean_field.dart';
 
 class DataSuperclassBuilder {
   final String layoutClass;
+  final NamingConvention convention;
   final List<Tuple<FieldElement, ParameterElement>> daoFields;
 
-  DataSuperclassBuilder(this.layoutClass, this.daoFields);
+  DataSuperclassBuilder(this.layoutClass, this.daoFields, this.convention);
 
   Iterable<String> build() sync* {
-    final fields = daoFields.map(_toDataBeanField).toList();
-    final primaryKeyField =
-        fields.firstOrNullWhere((f) => f.dataField is PrimaryKey);
+    final fields =
+        daoFields.map((e) => _toDataBeanField(e, convention)).toList();
+    final primaryKeyField = fields
+        .firstOrNullWhere((f) => f.dataField is PrimaryKeyFieldDescription);
     final primaryKeyClass = primaryKeyField?.field.type.element?.name;
 
     final baseClass = primaryKeyClass != null
@@ -36,5 +39,6 @@ class DataSuperclassBuilder {
   }
 }
 
-DataBeanField _toDataBeanField(Tuple<FieldElement, ParameterElement> e) =>
-    DataBeanField.fromElements(e.a, e.b);
+DataBeanField _toDataBeanField(
+        Tuple<FieldElement, ParameterElement> e, NamingConvention convention) =>
+    DataBeanField.fromElements(e.a, e.b, convention);

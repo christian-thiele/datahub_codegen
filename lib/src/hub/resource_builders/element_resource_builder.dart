@@ -33,7 +33,7 @@ class ElementResourceBuilder extends ResourceBuilder {
 
     final implementation =
         '${isMutable ? 'MutableElementResourceRestClient' : 'ElementResourceRestClient'}'
-        '(_client, RoutePattern(\'\$basePath${readField(annotation, 'path')}\'), $bean,)';
+        '(_client, RoutePattern(\'\$basePath${readFieldLiteral(annotation, 'path')}\'), $bean,)';
 
     final returnTypeName = isMutable
         ? 'MutableElementResourceClient<$transferClass>'
@@ -93,7 +93,7 @@ class ElementResourceBuilder extends ResourceBuilder {
 
     final implementation =
         '${isMutable ? 'MutableElementResourceAdapter' : 'ElementResourceAdapter'}'
-        '(RoutePattern(\'${readField(annotation, 'path')}\'), $bean, $methods,)';
+        '(RoutePattern(\'${readFieldLiteral(annotation, 'path')}\'), $bean, $methods,)';
 
     final returnTypeName = isMutable
         ? 'MutableElementResourceProvider<$transferClass>'

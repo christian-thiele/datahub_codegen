@@ -3,7 +3,7 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:boost/boost.dart';
 import 'package:datahub/datahub.dart';
-import 'package:source_gen/source_gen.dart';
+import 'package:datahub_codegen/src/data_bean/field_description.dart';
 
 import 'package:datahub_codegen/utils.dart';
 
@@ -12,29 +12,34 @@ import 'data_bean_exception.dart';
 class DataBeanField {
   final FieldElement field;
   final ParameterElement parameter;
-  final DataField dataField;
+  final FieldDescription dataField;
   final String? foreignFieldAccessor;
 
   DataBeanField(
       this.field, this.parameter, this.dataField, this.foreignFieldAccessor);
 
-  DataBeanField.fromElements(this.field, this.parameter)
-      : dataField = getDataField(field),
+  DataBeanField.fromElements(
+      this.field, this.parameter, NamingConvention convention)
+      : dataField = getDataFieldDescription(field, convention),
         foreignFieldAccessor = getForeignFieldAccessor(field);
 
   String get valueAccessor => field.type.isEnum
       ? '${field.name}${dataField.nullable ? '?.name' : '.name'}'
       : field.name;
 
-  static DataField getDataField(FieldElement field) {
-    final fieldName = getColumnName(field);
-    final fieldType = getColumnType(field);
+  static FieldDescription getDataFieldDescription(
+      FieldElement field, NamingConvention convention) {
+    final fieldName = getColumnName(field, convention);
+    final fieldType = getTypeName(field) ?? getInferredTypeName(field);
     final fieldLength = getLength(field);
     final fieldNullable = getNullability(field);
-    final layoutName = getLayoutName(field.enclosingElement as ClassElement);
+    final layoutName =
+        getLayoutName(field.enclosingElement as ClassElement, convention);
 
     if (isPrimaryKeyField(field)) {
-      if (fieldType != FieldType.Int && fieldType != FieldType.String) {
+      if (fieldType != 'IntDataType' &&
+          fieldType != 'SerialDataType' &&
+          fieldType != 'StringDataType') {
         throw DataBeanException(
             'Invalid field type for primary key field: $fieldType');
       }
@@ -43,64 +48,70 @@ class DataBeanField {
         throw DataBeanException('Primary key field $fieldType is nullable.');
       }
 
-      return PrimaryKey(
-        fieldType,
-        layoutName,
-        fieldName,
+      return PrimaryKeyFieldDescription(
+        layoutName: layoutName,
+        name: fieldName,
+        nullable: fieldNullable,
         length: fieldLength,
-        autoIncrement: fieldType == FieldType.Int && isAutoIncrement(field),
+        typeName: fieldType,
+        dartType: field.type,
+        autoIncrement: isAutoIncrement(field),
       );
     } else if (isForeignKeyField(field)) {
-      final foreignPrimary = getForeignPrimaryKey(field);
-      if (fieldType != foreignPrimary.type) {
+      final foreignPrimary = getForeignPrimaryKeyDescription(field, convention);
+      //TODO check types instead of just type names
+      if (field.type != foreignPrimary.dartType) {
         throw DataBeanException(
-            'Foreign key field "$fieldName" does not match type of foreign primary key.');
+            'Foreign key field "${field.name}" does not match type of foreign primary key.');
       }
-      return ForeignKey(
-        foreignPrimary,
-        layoutName,
-        fieldName,
+      return ForeignKeyFieldDescription(
+        typeName: field.type.isDartCoreInt ? 'IntDataType' : 'StringDataType',
+        foreignPrimaryKey: foreignPrimary,
+        layoutName: layoutName,
+        name: fieldName,
         nullable: fieldNullable,
+        length: fieldLength,
+        dartType: field.type,
       );
     } else {
-      return DataField(
-        fieldType,
-        layoutName,
-        fieldName,
-        length: fieldLength,
+      return FieldDescription(
+        typeName: fieldType,
+        layoutName: layoutName,
+        name: fieldName,
         nullable: fieldNullable,
+        length: fieldLength,
+        dartType: field.type,
       );
     }
   }
 
-  static FieldType getColumnType(FieldElement field) {
+  static String getInferredTypeName(FieldElement field) {
     final fieldType = field.type;
     if (fieldType.isDartCoreString) {
-      return FieldType.String;
+      return 'StringDataType';
     } else if (fieldType.isDartCoreInt) {
-      return FieldType.Int;
+      return 'IntDataType';
     } else if (fieldType.isDartCoreDouble) {
-      return FieldType.Float;
+      return 'DoubleDataType';
     } else if (fieldType.isDartCoreBool) {
-      return FieldType.Bool;
+      return 'ByteDataType';
     } else if (fieldType.isDartCoreDateTime) {
-      return FieldType.DateTime;
+      return 'DateTimeDataType';
     } else if (fieldType.isUint8List) {
-      return FieldType.Bytes;
-    } else if (TypeChecker.fromRuntime(Point).isExactlyType(fieldType)) {
-      return FieldType.Point;
+      return 'ByteDataType';
     } else if (fieldType.isJsonType || fieldType.isTransferObject) {
-      return FieldType.Json;
+      return 'JsonMapDataType';
     } else if (fieldType.isEnum) {
-      return FieldType.String;
+      return 'StringDataType';
     } else {
       throw DataBeanException.invalidType(fieldType);
     }
   }
 
-  static String getColumnName(FieldElement field) {
+  static String getColumnName(FieldElement field, NamingConvention convention) {
     final annotation = getAnnotation(field, DaoField);
-    return readField<String>(annotation, 'name') ?? field.name;
+    return readFieldLiteral<String>(annotation, 'name') ??
+        toNamingConvention(field.name, convention);
   }
 
   static bool getNullability(FieldElement field) {
@@ -109,8 +120,13 @@ class DataBeanField {
 
   static int getLength(FieldElement field) {
     final annotation = getAnnotation(field, DaoField);
-    return readField<int>(annotation, 'length') ??
-        DataField.getDefaultLength(getColumnType(field));
+    return readFieldLiteral<int>(annotation, 'length') ?? 0;
+  }
+
+  static String? getTypeName(FieldElement field) {
+    final annotation = getAnnotation(field, DaoField);
+    final obj = readField(annotation, 'type');
+    return obj?.toTypeValue()?.element?.name;
   }
 
   static FieldElement? findPrimaryKeyField(List<FieldElement> fields) {
@@ -132,12 +148,13 @@ class DataBeanField {
   static bool isAutoIncrement(FieldElement field) {
     final annotation = getAnnotation(field, PrimaryKeyDaoField);
     if (annotation != null) {
-      return readField<bool>(annotation, 'autoIncrement')!;
+      return readFieldLiteral<bool>(annotation, 'autoIncrement')!;
     }
     return false;
   }
 
-  static PrimaryKey getForeignPrimaryKey(FieldElement field) {
+  static PrimaryKeyFieldDescription getForeignPrimaryKeyDescription(
+      FieldElement field, NamingConvention convention) {
     final annotation = getAnnotation(field, ForeignKeyDaoField) ??
         (throw Exception('Not a foreign key field.'));
     final foreignType = readTypeField(annotation, 'foreignType')!;
@@ -145,7 +162,8 @@ class DataBeanField {
             podoFields(foreignType.element as ClassElement).a.toList()) ??
         (throw DataBeanException(
             'DAO "${foreignType.element?.name}" does not provide a primary key.'));
-    return getDataField(fieldElement) as PrimaryKey;
+    return getDataFieldDescription(fieldElement, convention)
+        as PrimaryKeyFieldDescription;
   }
 
   static String? getForeignFieldAccessor(FieldElement field) {
@@ -160,7 +178,7 @@ class DataBeanField {
             podoFields(foreignClassElement).a.toList()) ??
         (throw DataBeanException(
             'DAO "${foreignType.element?.name}" does not provide a primary key.'));
-    return '${foreignClassElement.name}DataBean.${fieldElement.name}Field';
+    return '${foreignClassElement.name}DataBean.${fieldElement.name}';
   }
 
   String getEncodingStatement(String accessor) {

@@ -4,7 +4,7 @@ import '../transfer_object/contact.dart';
 
 part 'json_fields.g.dart';
 
-@DaoType(name: 'json_fields')
+@DaoType()
 class JsonFields extends _Dao {
   final List dynamicList;
   final List? dynamicListNullable;

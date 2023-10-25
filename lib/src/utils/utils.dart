@@ -141,7 +141,7 @@ DartObject? getAnnotation(Element element, Type annotationType) {
       .firstAnnotationOf(element, throwOnUnresolved: false);
 }
 
-T? readField<T>(DartObject? element, String fieldName) {
+DartObject? readField(DartObject? element, String fieldName) {
   if (element == null) {
     return null;
   }
@@ -152,6 +152,22 @@ T? readField<T>(DartObject? element, String fieldName) {
   if (valueReader.isNull) {
     return null;
   }
+
+  return valueReader.objectValue;
+}
+
+T? readFieldLiteral<T>(DartObject? element, String fieldName) {
+  if (element == null) {
+    return null;
+  }
+
+  final reader = ConstantReader(element);
+  final valueReader = reader.read(fieldName);
+
+  if (valueReader.isNull) {
+    return null;
+  }
+
   return valueReader.literalValue as T?;
 }
 
@@ -169,9 +185,21 @@ DartType? readTypeField(DartObject? element, String fieldName) {
   return valueReader.typeValue;
 }
 
-String getLayoutName(ClassElement element) {
+String getLayoutName(ClassElement element, NamingConvention convention) {
   final annotation = getAnnotation(element, DaoType);
-  return readField<String>(annotation, 'name') ?? element.name.toLowerCase();
+  return readFieldLiteral<String>(annotation, 'name') ??
+      toNamingConvention(element.name, convention);
+}
+
+NamingConvention getNamingConvention(ClassElement element) {
+  final annotation = getAnnotation(element, DaoType);
+  final object = readField(annotation, 'namingConvention');
+  final variable = object?.variable;
+  if (variable != null) {
+    return findEnum(variable.name, NamingConvention.values);
+  } else {
+    return NamingConvention.none;
+  }
 }
 
 extension StringExtension on String {

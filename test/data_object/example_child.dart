@@ -1,0 +1,18 @@
+import 'package:datahub/datahub.dart';
+
+import 'example.dart';
+
+part 'example_child.g.dart';
+
+@DaoType(namingConvention: NamingConvention.camelCase)
+class ExampleChild extends _Dao {
+  @PrimaryKeyDaoField(type: SerialDataType)
+  final int id;
+  final String name;
+
+  @ForeignKeyDaoField(Example)
+  final int parentExample;
+
+  ExampleChild(
+      {required this.id, required this.name, required this.parentExample});
+}

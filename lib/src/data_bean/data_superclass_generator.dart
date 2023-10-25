@@ -13,6 +13,11 @@ class DataSuperclassGenerator extends GeneratorForAnnotation<DaoType> {
       Element element, ConstantReader annotation, BuildStep buildStep) sync* {
     final classElement = assertPodo(element);
     final classFields = podoFields(classElement);
-    yield* DataSuperclassBuilder(classElement.name, classFields).build();
+    final namingConvention = getNamingConvention(classElement);
+    yield* DataSuperclassBuilder(
+      classElement.name,
+      classFields,
+      namingConvention,
+    ).build();
   }
 }
