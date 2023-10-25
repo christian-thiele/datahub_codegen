@@ -6,7 +6,7 @@ part 'example_child.g.dart';
 
 @DaoType(namingConvention: NamingConvention.camelCase)
 class ExampleChild extends _Dao {
-  @PrimaryKeyDaoField(type: SerialDataType)
+  @PrimaryKeyDaoField()
   final int id;
   final String name;
 

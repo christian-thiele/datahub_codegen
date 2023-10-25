@@ -40,7 +40,7 @@
         <entry key="boost">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.9/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.10/lib" />
             </list>
           </value>
         </entry>
@@ -173,7 +173,7 @@
         <entry key="datahub">
           <value>
             <list>
-              <option value="$PROJECT_DIR$/../datahub/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.17.0-dev.52/lib" />
             </list>
           </value>
         </entry>
@@ -556,7 +556,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/args-2.4.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/async-2.11.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.9/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/boost-1.8.10/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/buffer-1.2.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/build-2.4.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/build_config-1.1.1/lib" />
@@ -575,6 +575,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_amqp-0.2.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.3.2/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.17.0-dev.52/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/file-7.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/fixnum-1.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/frontend_server_client-3.2.0/lib" />
@@ -628,7 +629,6 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/webkit_inspection_protocol-1.2.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/xml-5.4.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/yaml-3.1.2/lib" />
-      <root url="file://$PROJECT_DIR$/../datahub/lib" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
