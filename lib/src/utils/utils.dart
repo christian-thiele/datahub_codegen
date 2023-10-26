@@ -126,9 +126,11 @@ extension DartTypeExtension on DartType {
 
   /// Json types are either List or Map
   bool get isJsonType {
-    if (isDartCoreList) {
-      return true;
-    } else if (isDartCoreMap) {
+    return isDartCoreList || isJsonMapType;
+  }
+
+  bool get isJsonMapType {
+    if (isDartCoreMap) {
       return (this as ParameterizedType).typeArguments.first.isDartCoreString;
     } else {
       return false;

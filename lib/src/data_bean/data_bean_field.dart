@@ -94,13 +94,15 @@ class DataBeanField {
     } else if (fieldType.isDartCoreDouble) {
       return 'DoubleDataType';
     } else if (fieldType.isDartCoreBool) {
-      return 'ByteDataType';
+      return 'BoolDataType';
     } else if (fieldType.isDartCoreDateTime) {
       return 'DateTimeDataType';
     } else if (fieldType.isUint8List) {
       return 'ByteDataType';
-    } else if (fieldType.isJsonType || fieldType.isTransferObject) {
+    } else if (fieldType.isJsonMapType || fieldType.isTransferObject) {
       return 'JsonMapDataType';
+    } else if (fieldType.isDartCoreList) {
+      return 'JsonListDataType';
     } else if (fieldType.isEnum) {
       return 'StringDataType';
     } else {
