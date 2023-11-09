@@ -1,5 +1,7 @@
 import 'package:datahub/datahub.dart';
 
+import 'example_enum.dart';
+
 part 'example.g.dart';
 
 @DaoType(namingConvention: NamingConvention.camelCase)
@@ -15,6 +17,8 @@ class Example extends _Dao {
   final double someExactNumber;
   final bool isActive;
   final List<String> tags;
+  final ExampleEnum someEnum;
+  final List<ExampleEnum> someEnums;
 
   Example({
     required this.id,
@@ -25,5 +29,7 @@ class Example extends _Dao {
     required this.someExactNumber,
     required this.isActive,
     required this.tags,
+    required this.someEnum,
+    required this.someEnums,
   });
 }

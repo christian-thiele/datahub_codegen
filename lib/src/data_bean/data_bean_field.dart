@@ -87,27 +87,42 @@ class DataBeanField {
 
   static String getInferredTypeName(FieldElement field) {
     final fieldType = field.type;
-    if (fieldType.isDartCoreString) {
-      return 'StringDataType';
-    } else if (fieldType.isDartCoreInt) {
-      return 'IntDataType';
-    } else if (fieldType.isDartCoreDouble) {
-      return 'DoubleDataType';
-    } else if (fieldType.isDartCoreBool) {
-      return 'BoolDataType';
-    } else if (fieldType.isDartCoreDateTime) {
-      return 'DateTimeDataType';
-    } else if (fieldType.isUint8List) {
-      return 'ByteDataType';
-    } else if (fieldType.isJsonMapType || fieldType.isTransferObject) {
-      return 'JsonMapDataType';
-    } else if (fieldType.isDartCoreList) {
-      return 'JsonListDataType';
-    } else if (fieldType.isEnum) {
-      return 'StringDataType';
-    } else {
-      throw DataBeanException.invalidType(fieldType);
-    }
+    return switch (fieldType) {
+      DartType(isDartCoreString: true) => 'StringDataType',
+      DartType(isDartCoreInt: true) => 'IntDataType',
+      DartType(isDartCoreDouble: true) => 'DoubleDataType',
+      DartType(isDartCoreBool: true) => 'BoolDataType',
+      DartType(isDartCoreDateTime: true) => 'DateTimeDataType',
+      DartType(isUint8List: true) => 'ByteDataType',
+      DartType(isEnum: true) => 'StringDataType',
+      DartType(isTransferObject: true) ||
+      DartType(isJsonMapType: true) =>
+        'JsonMapDataType',
+      ParameterizedType(
+        isDartCoreList: true,
+        typeArguments: [
+          DartType(isDartCoreString: true) || DartType(isEnum: true)
+        ]
+      ) =>
+        'StringArrayDataType',
+      ParameterizedType(
+        isDartCoreList: true,
+        typeArguments: [DartType(isDartCoreInt: true)]
+      ) =>
+        'IntArrayDataType',
+      ParameterizedType(
+        isDartCoreList: true,
+        typeArguments: [DartType(isDartCoreDouble: true)]
+      ) =>
+        'DoubleArrayDataType',
+      ParameterizedType(
+        isDartCoreList: true,
+        typeArguments: [DartType(isDartCoreBool: true)]
+      ) =>
+        'BoolArrayDataType',
+      DartType(isDartCoreList: true) => 'JsonListDataType',
+      _ => throw DataBeanException.invalidType(fieldType),
+    };
   }
 
   static String getColumnName(FieldElement field, NamingConvention convention) {
@@ -209,10 +224,8 @@ class DataBeanField {
     if (field.type.isEnum) {
       final enumType = field.type.element!.name!;
       if (dataField.nullable) {
-        // TODO this could be replaced with tryFindEnum from boost when boost is exported in datahub
         return '$enumType.values.cast<$enumType?>().firstWhere((v) => v.name == ($accessor), orElse: () => null)';
       } else {
-        // TODO this could be replaced with findEnum from boost when boost is exported in datahub
         return '$enumType.values.firstWhere((v) => v.name == ($accessor))';
       }
     } else if (field.type.isDartCoreList) {
@@ -222,7 +235,15 @@ class DataBeanField {
       final elementTypeName =
           '${elementType.element!.name}${elementTypeNullable ? '?' : ''}';
 
-      if (elementType.isTransferObject) {
+      if (elementType.isEnum) {
+        final enumType = elementType.element!.name!;
+        final decodeNonNull = '$enumType.values.firstWhere((e) => e.name == v)';
+        final decode = elementTypeNullable
+            ? '$accessor != null ? $decodeNonNull : null'
+            : decodeNonNull;
+
+        return 'decodeList<List<$elementTypeName>${dataField.nullable ? '?' : ''}, $elementTypeName>($accessor, (v, n) => $decode)';
+      } else if (elementType.isTransferObject) {
         final decodeNonNull =
             '${elementType.element!.name}TransferBean.toObject(v, name: n)';
         final decode = elementTypeNullable
