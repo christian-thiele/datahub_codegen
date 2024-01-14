@@ -27,6 +27,7 @@ class DataSuperclassBuilder {
     yield '@override _${layoutClass}DataBeanImpl get bean => ${layoutClass}DataBean;';
     if (primaryKeyClass != null) {
       yield* buildGetPrimaryKeyMethod(primaryKeyField!);
+      yield* buildCopyWithPrimaryKeyMethod(primaryKeyField!);
     }
     yield '}';
   }
@@ -36,6 +37,13 @@ class DataSuperclassBuilder {
     final primaryKeyClass = primaryKeyField.field.type.element!.name;
     yield '@override $primaryKeyClass getPrimaryKey() => '
         '(this as $layoutClass).${primaryKeyField.field.name};';
+  }
+
+  Iterable<String> buildCopyWithPrimaryKeyMethod(
+      DataBeanField primaryKeyField) sync* {
+    final primaryKeyClass = primaryKeyField.field.type.element!.name;
+    yield '@override $layoutClass copyWithPrimaryKey($primaryKeyClass value) => '
+        '(this as $layoutClass).copyWith(${primaryKeyField.field.name}: value);';
   }
 }
 
