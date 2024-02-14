@@ -16,11 +16,17 @@ class DataBeanField {
   final String? foreignFieldAccessor;
 
   DataBeanField(
-      this.field, this.parameter, this.dataField, this.foreignFieldAccessor);
+    this.field,
+    this.parameter,
+    this.dataField,
+    this.foreignFieldAccessor,
+  );
 
   DataBeanField.fromElements(
-      this.field, this.parameter, NamingConvention convention)
-      : dataField = getDataFieldDescription(field, convention),
+    this.field,
+    this.parameter,
+    NamingConvention convention,
+  )   : dataField = getDataFieldDescription(field, convention),
         foreignFieldAccessor = getForeignFieldAccessor(field);
 
   String get valueAccessor => field.type.isEnum
@@ -28,7 +34,9 @@ class DataBeanField {
       : field.name;
 
   static FieldDescription getDataFieldDescription(
-      FieldElement field, NamingConvention convention) {
+    FieldElement field,
+    NamingConvention convention,
+  ) {
     final fieldName = getColumnName(field, convention);
     final fieldType = getTypeName(field) ?? getInferredTypeName(field);
     final fieldLength = getLength(field);
@@ -56,10 +64,10 @@ class DataBeanField {
         typeName: fieldType,
         dartType: field.type,
         autoIncrement: isAutoIncrement(field),
+        isReactivePartition: isReactivePartition(field),
       );
     } else if (isForeignKeyField(field)) {
       final foreignPrimary = getForeignPrimaryKeyDescription(field, convention);
-      //TODO check types instead of just type names
       if (field.type != foreignPrimary.dartType) {
         throw DataBeanException(
             'Foreign key field "${field.name}" does not match type of foreign primary key.');
@@ -72,6 +80,7 @@ class DataBeanField {
         nullable: fieldNullable,
         length: fieldLength,
         dartType: field.type,
+        isReactivePartition: isReactivePartition(field),
       );
     } else {
       return FieldDescription(
@@ -81,6 +90,7 @@ class DataBeanField {
         nullable: fieldNullable,
         length: fieldLength,
         dartType: field.type,
+        isReactivePartition: isReactivePartition(field),
       );
     }
   }
@@ -168,6 +178,11 @@ class DataBeanField {
       return readFieldLiteral<bool>(annotation, 'autoIncrement')!;
     }
     return false;
+  }
+
+  static bool isReactivePartition(FieldElement field) {
+    final annotation = getAnnotation(field, ReactivePartition);
+    return annotation != null;
   }
 
   static PrimaryKeyFieldDescription getForeignPrimaryKeyDescription(

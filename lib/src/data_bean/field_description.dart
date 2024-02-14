@@ -7,6 +7,7 @@ class FieldDescription {
   final String typeName;
   final int length;
   final bool nullable;
+  final bool isReactivePartition;
 
   FieldDescription({
     required this.layoutName,
@@ -15,6 +16,7 @@ class FieldDescription {
     required this.length,
     required this.nullable,
     required this.dartType,
+    required this.isReactivePartition,
   });
 }
 
@@ -28,6 +30,7 @@ class PrimaryKeyFieldDescription extends FieldDescription {
     required super.length,
     required super.nullable,
     required super.dartType,
+    required super.isReactivePartition,
     required this.autoIncrement,
   });
 }
@@ -42,6 +45,7 @@ class ForeignKeyFieldDescription extends FieldDescription {
     required super.length,
     required super.nullable,
     required super.dartType,
+    required super.isReactivePartition,
     required this.foreignPrimaryKey,
   });
 }

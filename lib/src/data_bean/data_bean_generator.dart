@@ -9,14 +9,15 @@ import 'data_bean_builder.dart';
 
 class DataBeanGenerator extends GeneratorForAnnotation<DaoType> {
   @override
-  Iterable<String> generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) sync* {
+  String generateForAnnotatedElement(
+      Element element, ConstantReader annotation, BuildStep buildStep) {
     final classElement = assertPodo(element);
     final classFields = podoFields(classElement);
     final namingConvention = getNamingConvention(classElement);
     final layoutName = getLayoutName(classElement, namingConvention);
-    yield* DataBeanBuilder(
+    return DataBeanBuilder(
             classElement.name, layoutName, classFields, namingConvention)
-        .build();
+        .build()
+        .join('\n\n');
   }
 }

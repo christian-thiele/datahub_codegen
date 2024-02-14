@@ -94,6 +94,14 @@ class DataBeanBuilder {
       yield '${field.field.name},';
     }
     yield '];';
+
+    yield '@override late final reactivePartitions = [';
+    for (final field in fields.where((e) =>
+        DataBeanField.isPrimaryKeyField(e.field) ||
+        e.dataField.isReactivePartition)) {
+      yield '${field.field.name},';
+    }
+    yield '];';
   }
 
   String _buildInitializer(DataBeanField beanField) {

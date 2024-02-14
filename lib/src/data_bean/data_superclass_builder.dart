@@ -27,7 +27,7 @@ class DataSuperclassBuilder {
     yield '@override _${layoutClass}DataBeanImpl get bean => ${layoutClass}DataBean;';
     if (primaryKeyClass != null) {
       yield* buildGetPrimaryKeyMethod(primaryKeyField!);
-      yield* buildCopyWithPrimaryKeyMethod(primaryKeyField!);
+      yield* buildCopyWithPrimaryKeyMethod(primaryKeyField);
     }
     yield '}';
   }

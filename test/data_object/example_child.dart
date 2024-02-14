@@ -10,6 +10,7 @@ class ExampleChild extends _Dao {
   final int id;
   final String name;
 
+  @ReactivePartition()
   @ForeignKeyDaoField(Example)
   final int parentExample;
 
