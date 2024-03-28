@@ -19,6 +19,7 @@ class Example extends _Dao {
   final List<String> tags;
   final ExampleEnum someEnum;
   final List<ExampleEnum> someEnums;
+  final ExampleEnum? nullableEnum;
 
   Example({
     required this.id,
@@ -31,5 +32,6 @@ class Example extends _Dao {
     required this.tags,
     required this.someEnum,
     required this.someEnums,
+    required this.nullableEnum,
   });
 }

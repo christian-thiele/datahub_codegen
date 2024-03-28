@@ -239,7 +239,7 @@ class DataBeanField {
     if (field.type.isEnum) {
       final enumType = field.type.element!.name!;
       if (dataField.nullable) {
-        return '$enumType.values.cast<$enumType?>().firstWhere((v) => v.name == ($accessor), orElse: () => null)';
+        return '$enumType.values.cast<$enumType?>().firstWhere((v) => v?.name == ($accessor), orElse: () => null)';
       } else {
         return '$enumType.values.firstWhere((v) => v.name == ($accessor))';
       }
